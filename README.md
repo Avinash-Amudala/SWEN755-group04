@@ -25,9 +25,14 @@ A simple Java-based application that simulates monitoring server connections. Th
 ### Compiling
 
 To compile the code, navigate to the directory containing the source files and run:
+
+```bash
 javac ServerMonitorSystem.java
+```
 
 ### Running
 
 After compilation, run the system using:
+```bash
 java ServerMonitorSystem
+```
