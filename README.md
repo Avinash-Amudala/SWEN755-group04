@@ -27,7 +27,7 @@ A simple Java-based application that simulates monitoring server connections. Th
 To compile the code, navigate to the directory containing the source files and run:
 
 ```bash
-javac ServerMonitorSystem.java
+javac ServerMonitorSystem.java CriticalServerProcess.java HeartbeatManager.java
 ```
 
 ### Running
