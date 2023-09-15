@@ -1,3 +1,5 @@
+package src;
+
 public class HeartbeatManager extends Thread {
 
     private long lastHeartbeat = System.currentTimeMillis();
