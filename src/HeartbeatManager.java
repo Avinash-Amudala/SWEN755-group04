@@ -7,14 +7,22 @@ public class HeartbeatManager extends Thread {
 
     public void run() {
         while (true) {
-            if ((System.currentTimeMillis() - lastHeartbeat) > THRESHOLD) {
+            if ((System.currentTimeMillis() - getLastHeartbeat()) > THRESHOLD) {
                 System.out.println("Server might have crashed!");
-                lastHeartbeat = System.currentTimeMillis();
+                resetHeartbeat();
             }
         }
     }
 
-    public void receiveHeartbeat() {
+    public synchronized void receiveHeartbeat() {
+        lastHeartbeat = System.currentTimeMillis();
+    }
+
+    private synchronized long getLastHeartbeat() {
+        return lastHeartbeat;
+    }
+
+    private synchronized void resetHeartbeat() {
         lastHeartbeat = System.currentTimeMillis();
     }
 }
