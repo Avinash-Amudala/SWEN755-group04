@@ -7,6 +7,7 @@ public class CriticalServerProcess extends Thread {
 
     private HeartbeatManager hm;
     private ServerSocket serverSocket;
+    private volatile boolean running = true;  // to manage the server's running state
 
     public CriticalServerProcess(HeartbeatManager hm, int port) throws IOException {
         this.hm = hm;
@@ -14,22 +15,11 @@ public class CriticalServerProcess extends Thread {
     }
 
     public void run() {
-        while (true) {
+        // Start a separate thread for sending heartbeats and checking for random failures
+        new Thread(this::sendHeartbeatsAndRandomFailures).start();
+
+        while (running) {
             acceptClient();
-
-            // Sending heartbeat
-            hm.receiveHeartbeat();
-
-            // Random failure
-            if (Math.random() > 0.95) {
-                throw new RuntimeException("Random failure in Server!");
-            }
-
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
         }
     }
 
@@ -41,6 +31,26 @@ public class CriticalServerProcess extends Thread {
             socket.close();
         } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+
+    private void sendHeartbeatsAndRandomFailures() {
+        while (running) {
+            // Send heartbeat
+            hm.receiveHeartbeat();
+
+            // Random failure
+            if (Math.random() > 0.5) {
+                System.out.println("Random failure in Server!");
+                running = false;  // Stop the server gracefully
+                break;
+            }
+
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
     }
 }
