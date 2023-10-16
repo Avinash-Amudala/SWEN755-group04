@@ -31,7 +31,7 @@ public class CriticalServerProcess extends Thread {
             System.out.println("Client connected from IP address: " + socket.getInetAddress().getHostAddress());
             }
             else{
-                System.out.println("Random failure in Server!");
+                System.out.println("Client connection rejected!");
                 out.println("Server has experienced a failure.");
             }
             socket.close();
