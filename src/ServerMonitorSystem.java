@@ -13,6 +13,10 @@ public class ServerMonitorSystem {
         try {
             CriticalServerProcess serverProcess = new CriticalServerProcess(heartbeatManager, serverPort);
             serverProcess.start();
+
+            // Create and start the SecondaryServer with a reference to the primary server
+            SecondaryServer secondaryServer = new SecondaryServer(serverProcess);
+            secondaryServer.start();
         } catch (IOException e) {
             e.printStackTrace();
         }
