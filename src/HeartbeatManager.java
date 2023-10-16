@@ -1,7 +1,6 @@
 package src;
 
 public class HeartbeatManager extends Thread {
-
     private long lastHeartbeat = System.currentTimeMillis();
     private static final long THRESHOLD = 3000;
 

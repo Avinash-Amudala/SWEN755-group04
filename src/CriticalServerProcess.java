@@ -4,7 +4,6 @@ import java.net.*;
 import java.io.*;
 
 public class CriticalServerProcess extends Thread {
-
     private HeartbeatManager hm;
     private ServerSocket serverSocket;
     private volatile boolean running = true;  // to manage the server's running state
@@ -18,7 +17,7 @@ public class CriticalServerProcess extends Thread {
         // Start a separate thread for sending heartbeats and checking for random failures
         new Thread(this::sendHeartbeatsAndRandomFailures).start();
 
-        while (running) {
+        while (true) {
             acceptClient();
         }
     }
@@ -27,7 +26,14 @@ public class CriticalServerProcess extends Thread {
         try {
             Socket socket = serverSocket.accept();
             PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
+            if(running){
             out.println("Connected to server!");
+            System.out.println("Client connected from IP address: " + socket.getInetAddress().getHostAddress());
+            }
+            else{
+                System.out.println("Random failure in Server!");
+                out.println("Server has experienced a failure.");
+            }
             socket.close();
         } catch (IOException e) {
             e.printStackTrace();
@@ -40,7 +46,7 @@ public class CriticalServerProcess extends Thread {
             hm.receiveHeartbeat();
 
             // Random failure
-            if (Math.random() > 0.5) {
+            if (Math.random() > 0.9) {
                 System.out.println("Random failure in Server!");
                 running = false;  // Stop the server gracefully
                 break;

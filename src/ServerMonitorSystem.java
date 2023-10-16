@@ -4,11 +4,15 @@ import java.io.IOException;
 
 public class ServerMonitorSystem {
     public static void main(String[] args) {
-        HeartbeatManager hm = new HeartbeatManager();
+        HeartbeatManager heartbeatManager = new HeartbeatManager();
+
+        // Start the HeartbeatManager thread
+        heartbeatManager.start();
+
+        int serverPort = 8080; // Change to your desired port
         try {
-            CriticalServerProcess csp = new CriticalServerProcess(hm, 8080);
-            hm.start();
-            csp.start();
+            CriticalServerProcess serverProcess = new CriticalServerProcess(heartbeatManager, serverPort);
+            serverProcess.start();
         } catch (IOException e) {
             e.printStackTrace();
         }
