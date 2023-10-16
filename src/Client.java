@@ -8,24 +8,35 @@ import java.net.ConnectException;
 
 public class Client {
     public static void main(String[] args) {
-        String serverAddress = "192.168.1.126";
-        int serverPort = 8080;
+        String serverAddress = "127.0.0.1";
+        int primaryServerPort = 8080;
+        int secondaryServerPort = 8081;
 
+        // Try connecting to primary server first
+        if (!tryConnect(serverAddress, primaryServerPort)) {
+            // If failed, try connecting to secondary server
+            tryConnect(serverAddress, secondaryServerPort);
+        }
+    }
+
+    private static boolean tryConnect(String serverAddress, int serverPort) {
         try {
             Socket socket = new Socket(serverAddress, serverPort);
             BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 
-            String message;
-            while ((message = in.readLine()) != null) {
+            String message = in.readLine();
+            if (message != null) {
                 System.out.println("Server says: " + message);
             }
 
-            System.out.println("Server has closed the connection.");
+            in.close();
             socket.close();
+            return true;
         } catch (ConnectException e) {
-            System.out.println("Failed to connect to the server. Server might be down or unreachable.");
+            return false;
         } catch (IOException e) {
             e.printStackTrace();
+            return false;
         }
     }
 }
